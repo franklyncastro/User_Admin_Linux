@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica de Linux - Administración de Usuarios y Permisos</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      background:#0f1117;
+      color:#e6e6e6;
+      font-family:"Segoe UI", Arial, sans-serif;
+      line-height:1.7;
+      padding:40px;
+    }
+
+    .container{
+      max-width:1200px;
+      margin:auto;
+    }
+
+    header{
+      text-align:center;
+      margin-bottom:50px;
+      padding-bottom:20px;
+      border-bottom:1px solid #2a2d36;
+    }
+
+    header h1{
+      font-size:42px;
+      color:#ffffff;
+      margin-bottom:10px;
+    }
+
+    header h2{
+      font-size:20px;
+      color:#9aa4b2;
+      font-weight:normal;
+    }
+
+    section{
+      background:#171a22;
+      border:1px solid #252933;
+      border-radius:10px;
+      padding:30px;
+      margin-bottom:35px;
+    }
+
+    section h2{
+      color:#61dafb;
+      margin-bottom:20px;
+      border-left:4px solid #61dafb;
+      padding-left:12px;
+      font-size:28px;
+    }
+
+    .exercise{
+      margin-bottom:35px;
+      padding:20px;
+      background:#1e222d;
+      border-radius:8px;
+      border:1px solid #2c313c;
+    }
+
+    .exercise h3{
+      color:#ffffff;
+      margin-bottom:15px;
+      font-size:22px;
+    }
+
+    .objective{
+      margin-bottom:15px;
+      color:#c7d0dd;
+    }
+
+    .commands{
+      background:#0d1117;
+      border:1px solid #30363d;
+      border-radius:8px;
+      padding:15px;
+      margin-top:15px;
+      overflow-x:auto;
+    }
+
+    code{
+      color:#7ee787;
+      font-family:Consolas, monospace;
+      font-size:15px;
+      white-space:pre-wrap;
+    }
+
+    ul{
+      margin-left:20px;
+      margin-top:10px;
+    }
+
+    li{
+      margin-bottom:8px;
+    }
+
+    .note{
+      margin-top:15px;
+      padding:12px;
+      background:#222733;
+      border-left:4px solid #f0b429;
+      color:#d8dee9;
+      border-radius:5px;
+    }
+
+    .menu-navigation{
+      display:flex;
+      flex-direction:column;
+      gap:15px;
+      margin-top:20px;
+    }
+
+    .menu-navigation a{
+      text-decoration:none;
+      color:#e6e6e6;
+      background:#1e222d;
+      padding:15px;
+      border-radius:8px;
+      border:1px solid #2c313c;
+      transition:0.2s;
+      font-size:16px;
+    }
+
+    .menu-navigation a:hover{
+      background:#252b38;
+      border-color:#61dafb;
+      color:#61dafb;
+    }
+
+    footer{
+      text-align:center;
+      margin-top:50px;
+      color:#8b949e;
+      font-size:15px;
+      border-top:1px solid #2a2d36;
+      padding-top:20px;
+    }
+
+    .back-to-top{
+      position:fixed;
+      right:25px;
+      bottom:25px;
+      width:50px;
+      height:50px;
+      background:#61dafb;
+      color:#0f1117;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      border-radius:50%;
+      font-size:22px;
+      font-weight:bold;
+      box-shadow:0 0 10px rgba(0,0,0,0.4);
+    }
+
+    .back-to-top:hover{
+      background:#7be3ff;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header id="top">
+
+  <h1>Práctica de Linux</h1>
+
+  <h2>
+    Guía de Práctica - Administración de Usuarios y Permisos Linux
+  </h2>
+
+</header>
+
+<!-- INTRODUCCIÓN -->
+
+<section>
+
+  <h2>Introducción</h2>
+
+  <p>
+    Esta guía está diseñada para practicar la administración de usuarios,
+    grupos, permisos y seguridad básica en Linux.
+    Los ejercicios están organizados por secciones para ayudarte
+    a desarrollar habilidades reales utilizadas por administradores
+    e ingenieros Linux.
+  </p>
+
+  <div class="note">
+    Recomendación: Realiza todos los ejercicios en una máquina virtual
+    para evitar afectar tu sistema principal.
+  </div>
+
+</section>
+
+<!-- MENÚ -->
+
+<section>
+
+  <h2>Contenido</h2>
+
+  <div class="menu-navigation">
+
+    <a href="#usuarios">
+      1 - Administración de Usuarios
+    </a>
+
+    <a href="#grupos">
+      2 - Administración de Grupos
+    </a>
+
+    <a href="#permisos">
+      3 - Permisos de Archivos
+    </a>
+
+    <a href="#directorios">
+      4 - Permisos en Directorios
+    </a>
+
+    <a href="#acl">
+      5 - ACL (Permisos Avanzados)
+    </a>
+
+    <a href="#escenarios">
+      6 - Escenarios Reales
+    </a>
+
+  </div>
+
+</section>
+
+<!-- USUARIOS -->
+
+<section id="usuarios">
+
+  <h2>Sección 1 - Administración de Usuarios</h2>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 1 - Crear Usuario Básico</h3>
+
+    <div class="objective">
+      Objetivo: Crear un usuario llamado <strong>ana</strong>.
+    </div>
+
+    <div class="commands">
+      <code>
+sudo useradd -m -s /bin/bash ana
+sudo passwd ana
+id ana
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 2 - Crear Usuario sin Login</h3>
+
+    <div class="commands">
+      <code>
+sudo useradd -m -s /usr/sbin/nologin backupsvc
+cat /etc/passwd | grep backupsvc
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 3 - Crear Múltiples Usuarios</h3>
+
+    <div class="commands">
+      <code>
+sudo useradd -m carlos
+sudo useradd -m maria
+sudo useradd -m pedro
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 4 - Bloquear Usuario</h3>
+
+    <div class="commands">
+      <code>
+sudo passwd -l maria
+sudo passwd -u maria
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 5 - Expirar Cuenta</h3>
+
+    <div class="commands">
+      <code>
+sudo chage -E 2026-12-31 pedro
+sudo chage -l pedro
+      </code>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- GRUPOS -->
+
+<section id="grupos">
+
+  <h2>Sección 2 - Administración de Grupos</h2>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 1 - Crear Grupo</h3>
+
+    <div class="commands">
+      <code>
+sudo groupadd developers
+getent group developers
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 2 - Agregar Usuario a Grupo</h3>
+
+    <div class="commands">
+      <code>
+sudo usermod -aG developers ana
+groups ana
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 3 - Compartir Grupo</h3>
+
+    <div class="commands">
+      <code>
+sudo usermod -aG developers carlos
+sudo usermod -aG developers maria
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 4 - Remover Usuario del Grupo</h3>
+
+    <div class="commands">
+      <code>
+sudo gpasswd -d maria developers
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 5 - Grupo Administrativo</h3>
+
+    <div class="commands">
+      <code>
+sudo groupadd sysadmins
+sudo usermod -aG sysadmins ana
+      </code>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- PERMISOS -->
+
+<section id="permisos">
+
+  <h2>Sección 3 - Permisos de Archivos</h2>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 1 - Permisos Básicos</h3>
+
+    <div class="commands">
+      <code>
+touch prueba.txt
+chmod 644 prueba.txt
+ls -l prueba.txt
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 2 - Script Ejecutable</h3>
+
+    <div class="commands">
+      <code>
+touch backup.sh
+chmod 755 backup.sh
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 3 - Quitar Permisos</h3>
+
+    <div class="commands">
+      <code>
+chmod o-r prueba.txt
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 4 - Permisos Simbólicos</h3>
+
+    <div class="commands">
+      <code>
+chmod u+x backup.sh
+chmod g-w backup.sh
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 5 - Archivo Privado</h3>
+
+    <div class="commands">
+      <code>
+chmod 600 secreto.txt
+      </code>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- DIRECTORIOS -->
+
+<section id="directorios">
+
+  <h2>Sección 4 - Permisos en Directorios</h2>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 1 - Directorio Privado</h3>
+
+    <div class="commands">
+      <code>
+mkdir privado
+chmod 700 privado
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 2 - Directorio Compartido</h3>
+
+    <div class="commands">
+      <code>
+mkdir compartido
+chmod 770 compartido
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 3 - Grupo Propietario</h3>
+
+    <div class="commands">
+      <code>
+sudo chown :developers compartido
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 4 - SetGID</h3>
+
+    <div class="commands">
+      <code>
+chmod g+s compartido
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 5 - Sticky Bit</h3>
+
+    <div class="commands">
+      <code>
+chmod +t compartido
+      </code>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ACL -->
+
+<section id="acl">
+
+  <h2>Sección 5 - ACL (Permisos Avanzados)</h2>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 1 - Instalar ACL</h3>
+
+    <div class="commands">
+      <code>
+sudo apt install acl
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 2 - Asignar ACL</h3>
+
+    <div class="commands">
+      <code>
+sudo setfacl -m u:carlos:rwx secreto.txt
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 3 - Ver ACL</h3>
+
+    <div class="commands">
+      <code>
+getfacl secreto.txt
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 4 - Eliminar ACL</h3>
+
+    <div class="commands">
+      <code>
+sudo setfacl -x u:carlos secreto.txt
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Ejercicio 5 - ACL por Defecto</h3>
+
+    <div class="commands">
+      <code>
+sudo setfacl -d -m g:developers:rwx compartido
+      </code>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ESCENARIOS -->
+
+<section id="escenarios">
+
+  <h2>Sección 6 - Escenarios Reales</h2>
+
+  <div class="exercise">
+
+    <h3>Caso 1 - Carpeta para Desarrolladores</h3>
+
+    <ul>
+      <li>Crear carpeta compartida</li>
+      <li>Asignar grupo developers</li>
+      <li>Configurar permisos 770</li>
+      <li>Aplicar SetGID</li>
+    </ul>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Caso 2 - Script Solo para Root</h3>
+
+    <ul>
+      <li>Crear script</li>
+      <li>Asignar propietario root</li>
+      <li>Aplicar permisos 700</li>
+    </ul>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Caso 3 - Usuario Auditor</h3>
+
+    <ul>
+      <li>Permitir lectura de logs</li>
+      <li>Restringir escritura</li>
+      <li>Usar permisos 640</li>
+    </ul>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Caso 4 - Carpeta Temporal Segura</h3>
+
+    <div class="commands">
+      <code>
+chmod +t carpeta_temporal
+      </code>
+    </div>
+
+  </div>
+
+  <div class="exercise">
+
+    <h3>Caso 5 - Compartir Archivo con ACL</h3>
+
+    <ul>
+      <li>Crear archivo privado</li>
+      <li>Compartir solo con un usuario específico</li>
+      <li>Usar ACL</li>
+    </ul>
+
+  </div>
+
+</section>
+
+<footer>
+  By: Franklyn Castro
+</footer>
+
+</div>
+
+<!-- BOTÓN IR ARRIBA -->
+
+<a href="#top" class="back-to-top">↑</a>
+
+</body>
+
+</html>
